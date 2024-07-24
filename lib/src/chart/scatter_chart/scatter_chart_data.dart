@@ -26,20 +26,28 @@ class ScatterChartData extends AxisChartData with EquatableMixin {
   /// then a grid over it, you can customize it using [gridData],
   /// and it draws 4 borders around your chart, you can customize it using [borderData].
   ///
+  /// You can annotate some regions with a highlight color using [rangeAnnotations].
+  ///
   /// You can modify [scatterTouchData] to customize touch behaviors and responses.
   ///
   /// You can show some tooltipIndicators (a popup with an information)
   /// on top of each [ScatterChartData.scatterSpots] using [showingTooltipIndicators],
   /// just put spot indices you want to show it on top of them.
   ///
+  /// [ScatterChart] draws some horizontal or vertical lines on above or below of everything,
+  /// they are useful in some scenarios, for example you can show average line, you can fill
+  /// [extraLinesData] property to have your extra lines.
+  ///
   /// [clipData] forces the [LineChart] to draw lines inside the chart bounding box.
   ScatterChartData({
     List<ScatterSpot>? scatterSpots,
     FlTitlesData? titlesData,
+    super.extraLinesData = const ExtraLinesData(),
     ScatterTouchData? scatterTouchData,
     List<int>? showingTooltipIndicators,
     FlGridData? gridData,
     super.borderData,
+    super.rangeAnnotations = const RangeAnnotations(),
     double? minX,
     double? maxX,
     super.baselineX,
@@ -95,6 +103,10 @@ class ScatterChartData extends AxisChartData with EquatableMixin {
       return ScatterChartData(
         scatterSpots: lerpScatterSpotList(a.scatterSpots, b.scatterSpots, t),
         titlesData: FlTitlesData.lerp(a.titlesData, b.titlesData, t),
+        rangeAnnotations:
+            RangeAnnotations.lerp(a.rangeAnnotations, b.rangeAnnotations, t),
+        extraLinesData:
+            ExtraLinesData.lerp(a.extraLinesData, b.extraLinesData, t),
         scatterTouchData: b.scatterTouchData,
         showingTooltipIndicators: lerpIntList(
           a.showingTooltipIndicators,
@@ -127,6 +139,8 @@ class ScatterChartData extends AxisChartData with EquatableMixin {
   ScatterChartData copyWith({
     List<ScatterSpot>? scatterSpots,
     FlTitlesData? titlesData,
+    RangeAnnotations? rangeAnnotations,
+    ExtraLinesData? extraLinesData,
     ScatterTouchData? scatterTouchData,
     List<int>? showingTooltipIndicators,
     FlGridData? gridData,
@@ -144,6 +158,8 @@ class ScatterChartData extends AxisChartData with EquatableMixin {
     return ScatterChartData(
       scatterSpots: scatterSpots ?? this.scatterSpots,
       titlesData: titlesData ?? this.titlesData,
+      rangeAnnotations: rangeAnnotations ?? this.rangeAnnotations,
+      extraLinesData: extraLinesData ?? this.extraLinesData,
       scatterTouchData: scatterTouchData ?? this.scatterTouchData,
       showingTooltipIndicators:
           showingTooltipIndicators ?? this.showingTooltipIndicators,
@@ -169,6 +185,7 @@ class ScatterChartData extends AxisChartData with EquatableMixin {
         showingTooltipIndicators,
         gridData,
         titlesData,
+        extraLinesData,
         rangeAnnotations,
         minX,
         maxX,
@@ -176,7 +193,6 @@ class ScatterChartData extends AxisChartData with EquatableMixin {
         minY,
         maxY,
         baselineY,
-        rangeAnnotations,
         scatterLabelSettings,
         clipData,
         backgroundColor,
