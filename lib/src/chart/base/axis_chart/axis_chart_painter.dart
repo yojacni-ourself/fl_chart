@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fl_chart/src/chart/bar_chart/bar_chart_painter.dart';
 import 'package:fl_chart/src/chart/base/axis_chart/axis_chart_helper.dart';
@@ -164,6 +166,55 @@ abstract class AxisChartPainter<D extends AxisChartData>
     );
   }
 
+  void drawHorizontalCustomShape(
+    CanvasWrapper canvasWrapper,
+    PaintHolder<D> holder,
+    HorizontalRangeAnnotation annotation,
+  ) {}
+
+  void drawVerticalCustomShape(
+    CanvasWrapper canvasWrapper,
+    PaintHolder<D> holder,
+    VerticalRangeAnnotation annotation,
+  ) {
+    final data = holder.data;
+    final viewSize = canvasWrapper.size;
+
+    final path = Path()
+      ..moveTo(
+        getPixelX(annotation.x1, viewSize, holder),
+        getPixelY(data.minY, viewSize, holder),
+      )
+      ..arcTo(
+        Rect.fromCircle(
+          center: Offset(
+            (getPixelX(annotation.x1, viewSize, holder) +
+                    getPixelX(annotation.x2, viewSize, holder)) /
+                2,
+            getPixelY(
+              data.minY,
+              viewSize,
+              holder,
+            ),
+          ),
+          radius: (getPixelX(annotation.x2, viewSize, holder) -
+                  getPixelX(annotation.x1, viewSize, holder)) /
+              2,
+        ),
+        pi,
+        pi,
+        false,
+      );
+
+    _rangeAnnotationPaint.setColorOrGradient(
+      annotation.color,
+      annotation.gradient,
+      Rect.zero,
+    );
+
+    canvasWrapper.drawPath(path, _rangeAnnotationPaint);
+  }
+
   @visibleForTesting
   void drawRangeAnnotation(CanvasWrapper canvasWrapper, PaintHolder<D> holder) {
     final data = holder.data;
@@ -171,42 +222,50 @@ abstract class AxisChartPainter<D extends AxisChartData>
 
     if (data.rangeAnnotations.verticalRangeAnnotations.isNotEmpty) {
       for (final annotation in data.rangeAnnotations.verticalRangeAnnotations) {
-        final from = Offset(getPixelX(annotation.x1, viewSize, holder), 0);
-        final to = Offset(
-          getPixelX(annotation.x2, viewSize, holder),
-          viewSize.height,
-        );
+        if (annotation.isCustomShape == true) {
+          drawVerticalCustomShape(canvasWrapper, holder, annotation);
+        } else {
+          final from = Offset(getPixelX(annotation.x1, viewSize, holder), 0);
+          final to = Offset(
+            getPixelX(annotation.x2, viewSize, holder),
+            viewSize.height,
+          );
 
-        final rect = Rect.fromPoints(from, to);
+          final rect = Rect.fromPoints(from, to);
 
-        _rangeAnnotationPaint.setColorOrGradient(
-          annotation.color,
-          annotation.gradient,
-          rect,
-        );
+          _rangeAnnotationPaint.setColorOrGradient(
+            annotation.color,
+            annotation.gradient,
+            rect,
+          );
 
-        canvasWrapper.drawRect(rect, _rangeAnnotationPaint);
+          canvasWrapper.drawRect(rect, _rangeAnnotationPaint);
+        }
       }
     }
 
     if (data.rangeAnnotations.horizontalRangeAnnotations.isNotEmpty) {
       for (final annotation
           in data.rangeAnnotations.horizontalRangeAnnotations) {
-        final from = Offset(0, getPixelY(annotation.y1, viewSize, holder));
-        final to = Offset(
-          viewSize.width,
-          getPixelY(annotation.y2, viewSize, holder),
-        );
+        if (annotation.isCustomShape == true) {
+          drawHorizontalCustomShape(canvasWrapper, holder, annotation);
+        } else {
+          final from = Offset(0, getPixelY(annotation.y1, viewSize, holder));
+          final to = Offset(
+            viewSize.width,
+            getPixelY(annotation.y2, viewSize, holder),
+          );
 
-        final rect = Rect.fromPoints(from, to);
+          final rect = Rect.fromPoints(from, to);
 
-        _rangeAnnotationPaint.setColorOrGradient(
-          annotation.color,
-          annotation.gradient,
-          rect,
-        );
+          _rangeAnnotationPaint.setColorOrGradient(
+            annotation.color,
+            annotation.gradient,
+            rect,
+          );
 
-        canvasWrapper.drawRect(rect, _rangeAnnotationPaint);
+          canvasWrapper.drawRect(rect, _rangeAnnotationPaint);
+        }
       }
     }
   }

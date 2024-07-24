@@ -827,6 +827,7 @@ class HorizontalRangeAnnotation with EquatableMixin {
     required this.y2,
     Color? color,
     this.gradient,
+    this.isCustomShape,
   }) : color = color ??
             ((color == null && gradient == null) ? Colors.white : null);
 
@@ -848,6 +849,8 @@ class HorizontalRangeAnnotation with EquatableMixin {
   /// If none is provided, it draws with a white color.
   final Gradient? gradient;
 
+  final bool? isCustomShape;
+
   /// Lerps a [HorizontalRangeAnnotation] based on [t] value, check [Tween.lerp].
   static HorizontalRangeAnnotation lerp(
     HorizontalRangeAnnotation a,
@@ -859,6 +862,7 @@ class HorizontalRangeAnnotation with EquatableMixin {
       y2: lerpDouble(a.y2, b.y2, t)!,
       color: Color.lerp(a.color, b.color, t),
       gradient: Gradient.lerp(a.gradient, b.gradient, t),
+      isCustomShape: b.isCustomShape,
     );
   }
 
@@ -869,12 +873,14 @@ class HorizontalRangeAnnotation with EquatableMixin {
     double? y2,
     Color? color,
     Gradient? gradient,
+    bool? isCustomShape,
   }) {
     return HorizontalRangeAnnotation(
       y1: y1 ?? this.y1,
       y2: y2 ?? this.y2,
       color: color ?? this.color,
       gradient: gradient ?? this.gradient,
+      isCustomShape: isCustomShape ?? this.isCustomShape,
     );
   }
 
@@ -885,6 +891,7 @@ class HorizontalRangeAnnotation with EquatableMixin {
         y2,
         color,
         gradient,
+        isCustomShape,
       ];
 }
 
@@ -897,6 +904,7 @@ class VerticalRangeAnnotation with EquatableMixin {
     required this.x2,
     Color? color,
     this.gradient,
+    this.isCustomShape,
   }) : color = color ??
             ((color == null && gradient == null) ? Colors.white : null);
 
@@ -918,6 +926,8 @@ class VerticalRangeAnnotation with EquatableMixin {
   /// If none is provided, it draws with a white color.
   final Gradient? gradient;
 
+  final bool? isCustomShape;
+
   /// Lerps a [VerticalRangeAnnotation] based on [t] value, check [Tween.lerp].
   static VerticalRangeAnnotation lerp(
     VerticalRangeAnnotation a,
@@ -929,6 +939,7 @@ class VerticalRangeAnnotation with EquatableMixin {
       x2: lerpDouble(a.x2, b.x2, t)!,
       color: Color.lerp(a.color, b.color, t),
       gradient: Gradient.lerp(a.gradient, b.gradient, t),
+      isCustomShape: b.isCustomShape,
     );
   }
 
@@ -939,12 +950,14 @@ class VerticalRangeAnnotation with EquatableMixin {
     double? x2,
     Color? color,
     Gradient? gradient,
+    bool? isCustomShape,
   }) {
     return VerticalRangeAnnotation(
       x1: x1 ?? this.x1,
       x2: x2 ?? this.x2,
       color: color ?? this.color,
       gradient: gradient ?? this.gradient,
+      isCustomShape: isCustomShape ?? this.isCustomShape,
     );
   }
 
@@ -955,6 +968,7 @@ class VerticalRangeAnnotation with EquatableMixin {
         x2,
         color,
         gradient,
+        isCustomShape,
       ];
 }
 
