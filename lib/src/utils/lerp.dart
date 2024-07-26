@@ -63,6 +63,14 @@ double lerpNonNullDouble(double a, double b, double t) => lerpDouble(a, b, t)!;
 List<FlSpot>? lerpFlSpotList(List<FlSpot>? a, List<FlSpot>? b, double t) =>
     lerpList(a, b, t, lerp: FlSpot.lerp);
 
+/// Lerps [DiagonalLine] list based on [t] value, check [Tween.lerp].
+List<DiagonalLine>? lerpDiagonalLineList(
+  List<DiagonalLine>? a,
+  List<DiagonalLine>? b,
+  double t,
+) =>
+    lerpList(a, b, t, lerp: DiagonalLine.lerp);
+
 /// Lerps [HorizontalLine] list based on [t] value, check [Tween.lerp].
 List<HorizontalLine>? lerpHorizontalLineList(
   List<HorizontalLine>? a,

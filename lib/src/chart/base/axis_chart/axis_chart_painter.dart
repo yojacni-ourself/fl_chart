@@ -286,6 +286,10 @@ abstract class AxisChartPainter<D extends AxisChartData>
     if (data.extraLinesData.verticalLines.isNotEmpty) {
       drawVerticalLines(context, canvasWrapper, holder, viewSize);
     }
+
+    if (data.extraLinesData.diagonalLines.isNotEmpty) {
+      drawDiagonalLines(context, canvasWrapper, holder, viewSize);
+    }
   }
 
   void drawHorizontalLines(
@@ -391,6 +395,49 @@ abstract class AxisChartPainter<D extends AxisChartData>
               );
           }
         }
+      }
+    }
+  }
+
+  void drawDiagonalLines(
+    BuildContext context,
+    CanvasWrapper canvasWrapper,
+    PaintHolder<D> holder,
+    Size viewSize,
+  ) {
+    for (final line in holder.data.extraLinesData.diagonalLines) {
+      final from = Offset(
+        getPixelX(line.from.dx, viewSize, holder),
+        getPixelY(line.from.dy, viewSize, holder),
+      );
+      final to = Offset(
+        getPixelX(line.to.dx, viewSize, holder),
+        getPixelY(line.to.dy, viewSize, holder),
+      );
+
+      final isLineOutsideOfChart = from.dx < 0 ||
+          to.dx < 0 ||
+          from.dx > viewSize.width ||
+          to.dx > viewSize.width;
+
+      if (!isLineOutsideOfChart) {
+        _extraLinesPaint
+          ..setColorOrGradientForLine(
+            line.color,
+            line.gradient,
+            from: from,
+            to: to,
+          )
+          ..strokeWidth = line.strokeWidth
+          ..transparentIfWidthIsZero()
+          ..strokeCap = line.strokeCap;
+
+        canvasWrapper.drawDashedLine(
+          from,
+          to,
+          _extraLinesPaint,
+          line.dashArray,
+        );
       }
     }
   }

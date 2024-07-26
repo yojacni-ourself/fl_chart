@@ -972,6 +972,61 @@ class VerticalRangeAnnotation with EquatableMixin {
       ];
 }
 
+/// Holds data for drawing extra diagonal lines.
+///
+/// [LineChart] draws some [DiagonalLine] (set by [LineChartData.extraLinesData]),
+/// in below or above of everything, it draws from left to right side of the chart.
+class DiagonalLine extends FlLine with EquatableMixin {
+  /// [LineChart] draws vertical lines from left to right side of the chart
+  /// in the provided [from],[to] values, and color it using [color].
+  /// You can define the thickness using [strokeWidth]
+  ///
+  /// It draws a [label] over it.
+  ///
+  /// You can have a dashed line by filling [dashArray] with dash size and space respectively.
+  DiagonalLine({
+    required this.from,
+    required this.to,
+    super.color,
+    super.gradient,
+    super.strokeWidth,
+    super.dashArray,
+    this.strokeCap = StrokeCap.butt,
+  });
+
+  /// Draws from left to right of the chart using the [from],[left] value.
+  final Offset from;
+  final Offset to;
+
+  /// if not drawing dash line, then this is the Strokecap for the line.
+  /// i.e. if the two ends of the line is round or butt or square.
+  final StrokeCap strokeCap;
+
+  /// Lerps a [DiagonalLine] based on [t] value, check [Tween.lerp].
+  static DiagonalLine lerp(DiagonalLine a, DiagonalLine b, double t) {
+    return DiagonalLine(
+      to: Offset.lerp(a.to, b.to, t)!,
+      from: Offset.lerp(a.from, b.from, t)!,
+      color: Color.lerp(a.color, b.color, t),
+      gradient: Gradient.lerp(a.gradient, b.gradient, t),
+      strokeWidth: lerpDouble(a.strokeWidth, b.strokeWidth, t)!,
+      dashArray: lerpIntList(a.dashArray, b.dashArray, t),
+      strokeCap: b.strokeCap,
+    );
+  }
+
+  /// Used for equality check, see [EquatableMixin].
+  @override
+  List<Object?> get props => [
+        from,
+        to,
+        color,
+        strokeWidth,
+        dashArray,
+        strokeCap,
+      ];
+}
+
 /// Holds data for drawing extra horizontal lines.
 ///
 /// [LineChart] draws some [HorizontalLine] (set by [LineChartData.extraLinesData]),
@@ -1305,11 +1360,13 @@ class ExtraLinesData with EquatableMixin {
   const ExtraLinesData({
     this.horizontalLines = const [],
     this.verticalLines = const [],
+    this.diagonalLines = const [],
     this.extraLinesOnTop = true,
   });
 
   final List<HorizontalLine> horizontalLines;
   final List<VerticalLine> verticalLines;
+  final List<DiagonalLine> diagonalLines;
   final bool extraLinesOnTop;
 
   /// Lerps a [ExtraLinesData] based on [t] value, check [Tween.lerp].
@@ -1319,6 +1376,7 @@ class ExtraLinesData with EquatableMixin {
       horizontalLines:
           lerpHorizontalLineList(a.horizontalLines, b.horizontalLines, t)!,
       verticalLines: lerpVerticalLineList(a.verticalLines, b.verticalLines, t)!,
+      diagonalLines: lerpDiagonalLineList(a.diagonalLines, b.diagonalLines, t)!,
     );
   }
 
@@ -1327,6 +1385,7 @@ class ExtraLinesData with EquatableMixin {
   List<Object?> get props => [
         horizontalLines,
         verticalLines,
+        diagonalLines,
         extraLinesOnTop,
       ];
 }
