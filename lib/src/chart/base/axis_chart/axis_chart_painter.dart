@@ -216,28 +216,28 @@ abstract class AxisChartPainter<D extends AxisChartData>
     );
     canvasWrapper.drawPath(path, _rangeAnnotationPaint);
 
-    final textPainter = TextPainter(
-      textAlign: TextAlign.center,
-      text: const TextSpan(
-        text: 'Period',
-        style: TextStyle(
-          color: Color(0xff450430),
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: viewSize.width);
+    // final textPainter = TextPainter(
+    //   textAlign: TextAlign.center,
+    //   text: const TextSpan(
+    //     text: 'Period',
+    //     style: TextStyle(
+    //       color: Color(0xff450430),
+    //       fontSize: 12,
+    //       fontWeight: FontWeight.w700,
+    //     ),
+    //   ),
+    //   textDirection: TextDirection.ltr,
+    // )..layout(maxWidth: viewSize.width);
 
-    final offset = Offset(
-      getPixelX(
-        annotation.x2 / 2,
-        viewSize,
-        holder,
-      ),
-      getPixelY(data.minY + 0.5, viewSize, holder),
-    );
-    textPainter.paint(canvasWrapper.canvas, offset);
+    // final offset = Offset(
+    //   getPixelX(
+    //     annotation.x2 - annotation.x1,
+    //     viewSize,
+    //     holder,
+    //   ),
+    //   getPixelY(data.maxY - data.minY + 0.5, viewSize, holder),
+    // );
+    // textPainter.paint(canvasWrapper.canvas, offset);
   }
 
   @visibleForTesting
