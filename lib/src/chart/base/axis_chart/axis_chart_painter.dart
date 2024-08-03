@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fl_chart/src/chart/bar_chart/bar_chart_painter.dart';
 import 'package:fl_chart/src/chart/base/axis_chart/axis_chart_helper.dart';
@@ -185,31 +183,36 @@ abstract class AxisChartPainter<D extends AxisChartData>
         getPixelX(annotation.x1, viewSize, holder),
         getPixelY(data.minY, viewSize, holder),
       )
-      ..arcTo(
-        Rect.fromCircle(
-          center: Offset(
-            (getPixelX(annotation.x1, viewSize, holder) +
-                    getPixelX(annotation.x2, viewSize, holder)) /
-                2,
-            getPixelY(
-              data.minY,
-              viewSize,
-              holder,
-            ),
-          ),
-          radius: (getPixelX(annotation.x2, viewSize, holder) -
-                  getPixelX(annotation.x1, viewSize, holder)) /
-              2,
+      ..lineTo(
+        getPixelX(annotation.x1, viewSize, holder),
+        getPixelY((data.maxY + data.minY) / 3, viewSize, holder),
+      )
+      ..arcToPoint(
+        Offset(
+          getPixelX(annotation.x2, viewSize, holder),
+          getPixelY((data.maxY + data.minY) / 3, viewSize, holder),
         ),
-        pi,
-        pi,
-        false,
-      );
+        radius: const Radius.circular(3),
+      )
+      ..lineTo(
+        getPixelX(annotation.x2, viewSize, holder),
+        getPixelY(data.minY, viewSize, holder),
+      )
+      ..close();
 
     _rangeAnnotationPaint.setColorOrGradient(
       annotation.color,
       annotation.gradient,
-      Rect.zero,
+      Rect.fromPoints(
+        Offset(
+          getPixelX(annotation.x1, viewSize, holder),
+          getPixelY((data.maxY + data.minY) / 3, viewSize, holder),
+        ),
+        Offset(
+          getPixelX(annotation.x2, viewSize, holder),
+          getPixelY((data.maxY + data.minY) / 3, viewSize, holder),
+        ),
+      ),
     );
 
     canvasWrapper.drawPath(path, _rangeAnnotationPaint);
